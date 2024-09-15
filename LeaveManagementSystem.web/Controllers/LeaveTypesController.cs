@@ -15,6 +15,7 @@ namespace LeaveManagementSystem.web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private const string NameExistsValidationMessage = "A leave type already exists with this name.";
 
         public LeaveTypesController(ApplicationDbContext context, IMapper mapper)
         {
@@ -71,6 +72,11 @@ namespace LeaveManagementSystem.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaveTypeCreateVM leaveTypeCreate)
         {
+            if (await CheckIfLeaveTypeNameExistsAsync(leaveTypeCreate.Name))
+            {
+                ModelState.AddModelError(nameof(leaveTypeCreate.Name), NameExistsValidationMessage);
+            }
+
             if (ModelState.IsValid)
             {
                 var leaveType = _mapper.Map<LeaveType>(leaveTypeCreate);
@@ -110,6 +116,11 @@ namespace LeaveManagementSystem.web.Controllers
             if (id != leaveTypeEdit.Id)
             {
                 return NotFound();
+            }
+
+            if (await CheckIfLeaveTypeNameExistsForEditAsync(leaveTypeEdit))
+            {
+                ModelState.AddModelError(nameof(leaveTypeEdit.Name), NameExistsValidationMessage);
             }
 
             if (ModelState.IsValid)
@@ -175,6 +186,17 @@ namespace LeaveManagementSystem.web.Controllers
         private bool LeaveTypeExists(int id)
         {
             return _context.LeaveTypes.Any(e => e.Id == id);
+        }
+
+        private async Task<bool> CheckIfLeaveTypeNameExistsAsync(string name)
+        {
+            return await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(name.ToLower()));
+        }
+
+        private async Task<bool> CheckIfLeaveTypeNameExistsForEditAsync(LeaveTypeEditVM leaveTypeEdit)
+        {
+            return await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(leaveTypeEdit.Name.ToLower())
+            && q.Id != leaveTypeEdit.Id);
         }
     }
 }
