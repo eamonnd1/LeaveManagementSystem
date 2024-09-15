@@ -146,12 +146,15 @@ namespace LeaveManagementSystem.web.Controllers
 
             var leaveType = await _context.LeaveTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (leaveType == null)
             {
                 return NotFound();
             }
 
-            return View(leaveType);
+            var viewData = _mapper.Map<LeaveTypeReadOnlyVM>(leaveType);
+
+            return View(viewData);
         }
 
         // POST: LeaveTypes/Delete/5
