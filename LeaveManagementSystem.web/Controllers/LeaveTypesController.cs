@@ -28,13 +28,6 @@ namespace LeaveManagementSystem.web.Controllers
         {
             var data = await _context.LeaveTypes.ToListAsync();
             var viewData = _mapper.Map<List<LeaveTypeReadOnlyVM>>(data);
-
-/*            var viewData = data.Select(q => new IndexVM
-            {
-                Id = q.Id,
-                Name = q.Name,
-                NumberOfDays = q.NumberOfDays
-            });*/
             return View(viewData);
         }
 
