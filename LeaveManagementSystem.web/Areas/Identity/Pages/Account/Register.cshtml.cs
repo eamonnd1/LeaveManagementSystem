@@ -139,13 +139,13 @@ public class RegisterModel : PageModel
             {
                 _logger.LogInformation("User created a new account with password.");
 
-                if (Input.RoleName == "Supervisor")
+                if (Input.RoleName == Roles.Supervisor)
                 {
-                    await _userManager.AddToRolesAsync(user, ["Employee", "Supervisor"]);
+                    await _userManager.AddToRolesAsync(user, [Roles.Employee, Roles.Supervisor]);
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(user, "Employee");
+                    await _userManager.AddToRoleAsync(user, Roles.Employee);
                 }
 
 
