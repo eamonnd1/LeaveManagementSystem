@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LeaveManagementSystem.web.Data
+namespace LeaveManagementSystem.web.Data;
+
+public class LeaveType : BaseEntity
 {
-    public class LeaveType
-    {
-        public int Id { get; set; }
-        [Column(TypeName = "nvarchar(150)")]
-        public string Name { get; set; }
-        public int NumberOfDays { get; set; }
-    }
+    [Column(TypeName = "nvarchar(150)")]
+    public string Name { get; set; }
+    public int NumberOfDays { get; set; }
 }
