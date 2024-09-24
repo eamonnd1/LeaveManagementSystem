@@ -36,7 +36,13 @@
                                     <li><a class="dropdown-item text-dark" asp-controller="Periods" asp-action="Index">Periods</a></li>
                                 </ul>
                             </li>
-                        }                        
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="LeaveAllocation" asp-action="Details">View Allocations</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

@@ -155,6 +155,7 @@ public class RegisterModel : PageModel
 
                 var userId = await _userManager.GetUserIdAsync(user);
                 await _leaveAllocationsService.AllocateLeave(userId);
+
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(

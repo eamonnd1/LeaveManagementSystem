@@ -1,0 +1,96 @@
+﻿@model EmployeeAllocationVM
+
+@{
+    ViewData["Title"] = "View Allocation";
+}
+
+<h1>View allocations for @Model.FirstName @Model.LastName</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateOfBirth)
+        </dd>
+    </dl>
+</div>
+<hr />
+<div class="card">
+    <div class="card-header">
+        <h4>Leave Allocations</h4>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col">
+                    <div class="h-100 d-flex align-items-center justify-content-center">
+                        Leave Name
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="h-100 d-flex align-items-center justify-content-center">
+                        Original Allocations
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="h-100 d-flex align-items-center justify-content-center">
+                        Current Allocations
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="h-100 d-flex align-items-center justify-content-center">
+                        Action
+                    </div>
+                </div>
+            </div>
+        </li>
+        @foreach(var allocation in Model.LeaveAllocations)
+        {
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col">
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            @allocation.LeaveType.Name
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            <span class="badge rounded-pill bg-success">@allocation.Days</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            <span class="badge rounded-pill bg-success">@allocation.Days</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            <a asp-controller="LeaveRequest" asp-action="Create" class="btn btn-success">Request Leave</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

@@ -5,9 +5,9 @@ namespace LeaveManagementSystem.web.Controllers;
 [Authorize]
 public class LeaveAllocationController(ILeaveAllocationsService _leaveAllocationsService) : Controller
 {
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Details()
     {
-        var leaveAllocations = await _leaveAllocationsService.GetAllocations();
-        return View();
+        var employeeVM = await _leaveAllocationsService.GetEmployeeAllocations();
+        return View(employeeVM);
     }
 }
