@@ -31,24 +31,26 @@ public class LeaveAllocationsService(ApplicationDbContext _context,
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<LeaveAllocation>> GetAllocations()
+    private async Task<List<LeaveAllocation>> GetAllocations(string? userId)
     {
-        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        DateTime currentDate = DateTime.Now;
         var leaveAllocations = await _context.LeaveAllocations
             .Include(q => q.LeaveType)
             .Include(q => q.Period)
-            .Where(q => q.EmployeeId == user.Id)
+            .Where(q => q.EmployeeId == userId && q.Period.EndDate.Year == currentDate.Year)
             .ToListAsync();
 
         return leaveAllocations;
     }
 
-    public async Task<EmployeeAllocationVM> GetEmployeeAllocations()
+    public async Task<EmployeeAllocationVM> GetEmployeeAllocations(string? userId)
     {
-        var allocations = await GetAllocations();
+        var user = string.IsNullOrEmpty(userId) 
+            ? await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User)
+            : await _userManager.FindByIdAsync(userId);
+        var allocations = await GetAllocations(user.Id);
         var allocationVmList = _mapper.Map<List<LeaveAllocation>, List<LeaveAllocationVM>>(allocations);
 
-        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
         var employeeVm = new EmployeeAllocationVM
         {
             DateOfBirth = user.DateOfBirth,
@@ -60,5 +62,13 @@ public class LeaveAllocationsService(ApplicationDbContext _context,
         };
 
         return employeeVm;
+    }
+
+    public async Task<List<EmployeeListVM>> GetEmployees()
+    {
+        var users = await _userManager.GetUsersInRoleAsync(Roles.Employee);
+        var employees = _mapper.Map<List<ApplicationUser>, List<EmployeeListVM>>(users.ToList());
+    
+        return employees;
     }
 }

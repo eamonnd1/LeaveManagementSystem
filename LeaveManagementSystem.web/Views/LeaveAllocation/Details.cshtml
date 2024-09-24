@@ -36,61 +36,72 @@
     </dl>
 </div>
 <hr />
-<div class="card">
-    <div class="card-header">
-        <h4>Leave Allocations</h4>
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-            <div class="row">
-                <div class="col">
-                    <div class="h-100 d-flex align-items-center justify-content-center">
-                        Leave Name
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="h-100 d-flex align-items-center justify-content-center">
-                        Original Allocations
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="h-100 d-flex align-items-center justify-content-center">
-                        Current Allocations
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="h-100 d-flex align-items-center justify-content-center">
-                        Action
-                    </div>
-                </div>
+@if(Model.LeaveAllocations.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <h4>Leave Allocations for @Model.LeaveAllocations[0].Period.Name</h4>
             </div>
-        </li>
-        @foreach(var allocation in Model.LeaveAllocations)
-        {
+        </div>
+        <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <div class="row">
                     <div class="col">
                         <div class="h-100 d-flex align-items-center justify-content-center">
-                            @allocation.LeaveType.Name
+                            Leave Name
                         </div>
                     </div>
                     <div class="col">
                         <div class="h-100 d-flex align-items-center justify-content-center">
-                            <span class="badge rounded-pill bg-success">@allocation.Days</span>
+                            Original Allocations
                         </div>
                     </div>
                     <div class="col">
                         <div class="h-100 d-flex align-items-center justify-content-center">
-                            <span class="badge rounded-pill bg-success">@allocation.Days</span>
+                            Current Allocations
                         </div>
                     </div>
                     <div class="col">
                         <div class="h-100 d-flex align-items-center justify-content-center">
-                            <a asp-controller="LeaveRequest" asp-action="Create" class="btn btn-success">Request Leave</a>
+                            Action
                         </div>
                     </div>
                 </div>
             </li>
-        }
-    </ul>
-</div>
+            @foreach(var allocation in Model.LeaveAllocations)
+            {
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            <div class="h-100 d-flex align-items-center justify-content-center">
+                                @allocation.LeaveType.Name
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="h-100 d-flex align-items-center justify-content-center">
+                                <span class="badge rounded-pill bg-success">@allocation.Days</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="h-100 d-flex align-items-center justify-content-center">
+                                <span class="badge rounded-pill bg-success">@allocation.Days</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="h-100 d-flex align-items-center justify-content-center">
+                                <a asp-controller="LeaveRequest" asp-action="Create" class="btn btn-success">Request Leave</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        <h2>You have no allocations, please contact an administrator</h2>
+    </div>
+}
