@@ -9,7 +9,9 @@ public class LeaveAllocationsService(ApplicationDbContext _context,
 {
     public async Task AllocateLeave(string employeeId)
     {
-        var leaveTypes = await _context.LeaveTypes.ToListAsync();
+        var leaveTypes = await _context.LeaveTypes
+            .Where(q => !q.LeaveAllocations.Any(x => x.EmployeeId == employeeId))
+            .ToListAsync();
 
         DateTime currentDate = DateTime.Now;
         var period = await _context.Periods.FirstAsync(q => q.EndDate.Year == currentDate.Year);
@@ -31,6 +33,38 @@ public class LeaveAllocationsService(ApplicationDbContext _context,
         await _context.SaveChangesAsync();
     }
 
+    public async Task<EmployeeAllocationVM> GetEmployeeAllocations(string? userId)
+    {
+        var user = string.IsNullOrEmpty(userId) 
+            ? await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User)
+            : await _userManager.FindByIdAsync(userId);
+
+        var allocations = await GetAllocations(user.Id);
+        var allocationVmList = _mapper.Map<List<LeaveAllocation>, List<LeaveAllocationVM>>(allocations);
+        var leaveTypesCount = await _context.LeaveTypes.CountAsync();
+
+        var employeeVm = new EmployeeAllocationVM
+        {
+            DateOfBirth = user.DateOfBirth,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Id = user.Id,
+            LeaveAllocations = allocationVmList,
+            IsCompletedAllocation = leaveTypesCount == allocations.Count
+        };
+
+        return employeeVm;
+    }
+
+    public async Task<List<EmployeeListVM>> GetEmployees()
+    {
+        var users = await _userManager.GetUsersInRoleAsync(Roles.Employee);
+        var employees = _mapper.Map<List<ApplicationUser>, List<EmployeeListVM>>(users.ToList());
+    
+        return employees;
+    }
+
     private async Task<List<LeaveAllocation>> GetAllocations(string? userId)
     {
         DateTime currentDate = DateTime.Now;
@@ -43,32 +77,13 @@ public class LeaveAllocationsService(ApplicationDbContext _context,
         return leaveAllocations;
     }
 
-    public async Task<EmployeeAllocationVM> GetEmployeeAllocations(string? userId)
+    private async Task<bool> AllocationExists(string? userId, int periodId, int LeaveTypeId)
     {
-        var user = string.IsNullOrEmpty(userId) 
-            ? await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User)
-            : await _userManager.FindByIdAsync(userId);
-        var allocations = await GetAllocations(user.Id);
-        var allocationVmList = _mapper.Map<List<LeaveAllocation>, List<LeaveAllocationVM>>(allocations);
+        var exists = await _context.LeaveAllocations.AnyAsync(q => 
+        q.EmployeeId == userId
+        && q.LeaveTypeId == LeaveTypeId
+        && q.PeriodId == periodId);
 
-        var employeeVm = new EmployeeAllocationVM
-        {
-            DateOfBirth = user.DateOfBirth,
-            Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Id = user.Id,
-            LeaveAllocations = allocationVmList
-        };
-
-        return employeeVm;
-    }
-
-    public async Task<List<EmployeeListVM>> GetEmployees()
-    {
-        var users = await _userManager.GetUsersInRoleAsync(Roles.Employee);
-        var employees = _mapper.Map<List<ApplicationUser>, List<EmployeeListVM>>(users.ToList());
-    
-        return employees;
+        return exists;
     }
 }

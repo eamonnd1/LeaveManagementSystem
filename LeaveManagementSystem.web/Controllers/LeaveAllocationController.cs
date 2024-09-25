@@ -11,6 +11,11 @@ public class LeaveAllocationController(ILeaveAllocationsService _leaveAllocation
         var employees = await _leaveAllocationsService.GetEmployees();
         return View(employees);
     }
+    public async Task<IActionResult> AllocateLeave(string? userId)
+    {
+        await _leaveAllocationsService.AllocateLeave(userId);
+        return RedirectToAction(nameof(Details), new { userId });
+    }
 
     public async Task<IActionResult> Details(string? userId)
     {
