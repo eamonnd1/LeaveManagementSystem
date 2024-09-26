@@ -11,10 +11,13 @@ public class LeaveAllocationController(ILeaveAllocationsService _leaveAllocation
         var employees = await _leaveAllocationsService.GetEmployees();
         return View(employees);
     }
-    public async Task<IActionResult> AllocateLeave(string? userId)
+    [Authorize(Roles = Roles.Administrator)]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AllocateLeave(string? Id)
     {
-        await _leaveAllocationsService.AllocateLeave(userId);
-        return RedirectToAction(nameof(Details), new { userId });
+        await _leaveAllocationsService.AllocateLeave(Id);
+        return RedirectToAction(nameof(Details), new { userId = Id });
     }
 
     public async Task<IActionResult> Details(string? userId)
