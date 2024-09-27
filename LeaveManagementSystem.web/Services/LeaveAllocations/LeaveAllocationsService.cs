@@ -65,6 +65,26 @@ public class LeaveAllocationsService(ApplicationDbContext _context,
         return employees;
     }
 
+    public async Task<LeaveAllocationEditVM> GetEmployeeAllocation(int allocationId)
+    {
+        var allocation = await _context.LeaveAllocations
+            .Include(q => q.LeaveType)
+            .Include(q => q.Employee)
+            .FirstOrDefaultAsync(q => q.Id == allocationId);
+
+        var model = _mapper.Map<LeaveAllocationEditVM>(allocation);
+
+        return model;
+    }
+
+    public async Task EditAllocation(LeaveAllocationEditVM allocationEditVM)
+    {
+        var allocation = await GetEmployeeAllocation(allocationEditVM.Id);
+        await _context.LeaveAllocations
+            .Where(q => q.Id == allocationEditVM.Id)
+            .ExecuteUpdateAsync(s => s.SetProperty(e => e.Days, allocationEditVM.Days));
+    }
+
     private async Task<List<LeaveAllocation>> GetAllocations(string? userId)
     {
         DateTime currentDate = DateTime.Now;
@@ -86,4 +106,6 @@ public class LeaveAllocationsService(ApplicationDbContext _context,
 
         return exists;
     }
+
+
 }
