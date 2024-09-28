@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using LeaveManagementSystem.web.Models.LeaveTypes;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementSystem.web.Services.LeaveTypes;
 
@@ -63,5 +61,11 @@ public class LeaveTypesService(ApplicationDbContext _context, IMapper _mapper) :
     {
         return await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(leaveTypeEdit.Name.ToLower())
         && q.Id != leaveTypeEdit.Id);
+    }
+
+    public async Task<bool> DaysExceedMaximum(int LeaveTypeId, int Days)
+    {
+        var leaveType = await _context.LeaveTypes.FindAsync(LeaveTypeId);
+        return leaveType.NumberOfDays < Days;
     }
 }
