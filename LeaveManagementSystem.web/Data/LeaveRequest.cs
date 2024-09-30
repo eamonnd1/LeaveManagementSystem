@@ -5,7 +5,7 @@ public class LeaveRequest : BaseEntity
     public DateOnly StartDate {  get; set; }
     public DateOnly EndDate {  get; set; }
     public LeaveType? LeaveType { get; set; }
-    public int ? LeaveId { get; set; }
+    public int LeaveTypeId { get; set; }
     public LeaveRequestStatus? LeaveStatus { get; set; }
     public int LeaveRequestSatusId { get; set; }
     public ApplicationUser? Employee {  get; set; }
