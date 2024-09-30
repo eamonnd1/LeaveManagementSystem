@@ -1,5 +1,6 @@
 using LeaveManagementSystem.web.Services.Email;
 using LeaveManagementSystem.web.Services.LeaveAllocations;
+using LeaveManagementSystem.web.Services.LeaveRequests;
 using LeaveManagementSystem.web.Services.LeaveTypes;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -14,6 +15,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<ILeaveTypesService, LeaveTypesService>();
 builder.Services.AddScoped<ILeaveAllocationsService, LeaveAllocationsService>();
+builder.Services.AddScoped<ILeaveRequestsService, LeaveRequestsService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddHttpContextAccessor();
