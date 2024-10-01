@@ -16,7 +16,7 @@ public class LeaveRequestContoller : Controller
     }
     // Employee Create Requests
     [HttpPost]
-    public async Task<IActionResult> Create(int create /* Use VM */)
+    public async Task<IActionResult> Create(LeaveRequestCreateVM model)
     {
         return View();
     }
