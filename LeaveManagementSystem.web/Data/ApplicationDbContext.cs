@@ -23,5 +23,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
     public DbSet<Period> Periods{ get; set; }
     public DbSet<LeaveRequestStatus> LeaveRequestStatuses { get; set; }
-    public DbSet<LeaveRequest> leaveRequests { get; set; }
+    public DbSet<LeaveRequest> LeaveRequests { get; set; }
 }
