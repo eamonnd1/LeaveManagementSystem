@@ -35,12 +35,6 @@ namespace LeaveManagementSystem.web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(LeaveRequestCreateVM model)
         {
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            var leaveTypes = await _leaveTypesService.GetAll();
-            model.LeaveTypes = new SelectList(leaveTypes, "Id", "Name");
             return View(model);
         }
 
@@ -48,7 +42,7 @@ namespace LeaveManagementSystem.web.Controllers
         [HttpPost]
         public async Task<IActionResult> Cancel(int leaveRequestId)
         {
-            return RedirectToAction(nameof(Index));
+            return View();
         }
 
         // Admin/Supervisor Review Requests (GET)
