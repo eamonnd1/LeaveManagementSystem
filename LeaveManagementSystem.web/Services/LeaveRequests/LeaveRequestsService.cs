@@ -15,12 +15,12 @@ namespace LeaveManagementSystem.web.Services.LeaveRequests
             throw new NotImplementedException();
         }
 
-        public Task<LeaveRequestListVM> GetAllLeaveRequest()
+        public Task<LeaveRequestListVM> GetAllLeaveRequests()
         {
             throw new NotImplementedException();
         }
 
-        public Task<EmployeeLeaveRequestListVM> GetEmployeeLeaveRequest()
+        public Task<EmployeeLeaveRequestListVM> GetEmployeeLeaveRequests()
         {
             throw new NotImplementedException();
         }
