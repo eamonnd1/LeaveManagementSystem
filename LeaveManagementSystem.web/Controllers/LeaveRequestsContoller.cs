@@ -1,8 +1,6 @@
-﻿using LeaveManagementSystem.web.Services.LeaveTypes;
-using Microsoft.AspNetCore.Mvc;
+﻿using LeaveManagementSystem.web.Services.LeaveRequests;
+using LeaveManagementSystem.web.Services.LeaveTypes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using LeaveManagementSystem.web.Services.LeaveRequests;
 
 namespace LeaveManagementSystem.web.Controllers
 {
@@ -19,7 +17,7 @@ namespace LeaveManagementSystem.web.Controllers
         // Employee Create Requests (GET)
         public async Task<IActionResult> Create()
         {
-            var leaveTypes = await _leaveTypesService.GetAll(); 
+            var leaveTypes = await _leaveTypesService.GetAll();
             var leaveTypesList = new SelectList(leaveTypes, "Id", "Name");
 
             var model = new LeaveRequestCreateVM
@@ -37,9 +35,17 @@ namespace LeaveManagementSystem.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaveRequestCreateVM model)
         {
+            // Validate - Days dont exceed allocation
+            if(await _leaveRequestsService.RequestDatesExceedAllocation(model))
+            {
+                ModelState.AddModelError(string.Empty, "Leave requested exceeds allocation.");
+                ModelState.AddModelError(nameof(model.EndDate), "The number of days is invalid.");
+            }
+
             if (ModelState.IsValid)
             {
                 await _leaveRequestsService.CreatLeaveRequest(model);
+                return RedirectToAction(nameof(Index));
             }
             var leaveTypes = await _leaveTypesService.GetAll();
             model.LeaveTypes = new SelectList(leaveTypes, "Id", "Name");
