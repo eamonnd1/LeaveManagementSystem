@@ -23,7 +23,7 @@ public class LeaveRequestsService(IMapper _mapper,
         var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
         leaveRequest.EmployeeId = user.Id;
         // Set LeaveRequestStatusId to pending
-        leaveRequest.LeaveRequestSatusId = (int)LeaveRequestStatus.Pending;
+        leaveRequest.LeaveRequestSatusId = (int)LeaveRequestStatusEnum.Pending;
         // Save leave request
         _context.Add(leaveRequest);
         
@@ -37,14 +37,29 @@ public class LeaveRequestsService(IMapper _mapper,
         await _context.SaveChangesAsync();
     }
 
-    public Task<LeaveRequestListVM> GetAllLeaveRequests()
+    public Task<LeaveRequestReadOnlyVM> GetAllLeaveRequests()
     {
         throw new NotImplementedException();
     }
 
-    public Task<EmployeeLeaveRequestListVM> GetEmployeeLeaveRequests()
+    public async Task<List<EmployeeLeaveRequestListVM>> GetEmployeeLeaveRequests()
     {
-        throw new NotImplementedException();
+        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        var leaveRequests = await _context.LeaveRequests
+            .Include(q => q.LeaveType)
+            .Where(q => q.EmployeeId == user.Id).ToListAsync();
+
+        var model = leaveRequests.Select(q => new LeaveRequestReadOnlyVM
+        {
+            StartDate = q.StartDate,
+            EndDate = q.EndDate,
+            Id = q.LeaveTypeId,
+            LeaveType = q.LeaveType.Name,
+            LeaveRequestStatus = (LeaveRequestStatusEnum)q.LeaveRequestSatusId,
+            NumberOfDays = q.EndDate.DayNumber - q.StartDate.DayNumber
+        }).ToList();
+
+        return model;
     }
 
     public async Task<bool> RequestDatesExceedAllocation(LeaveRequestCreateVM model)
