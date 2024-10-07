@@ -10,9 +10,20 @@ public class LeaveRequestsService(IMapper _mapper,
     IHttpContextAccessor _httpContextAccessor,
     ApplicationDbContext _context) : ILeaveRequestsService
 {
-    public Task CancelLeaveRequest(int leaveRequestId)
+    public async Task CancelLeaveRequest(int leaveRequestId)
     {
-        throw new NotImplementedException();
+        var leaveRequest = await _context.LeaveRequests.FindAsync(leaveRequestId);
+        leaveRequest.LeaveRequestSatusId = (int)LeaveRequestStatusEnum.Canceled;
+
+        // Restore canceled days to allocation
+        var numberOfDays = leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber;
+        var allocation = await _context.LeaveAllocations
+            .FirstAsync(q => q.LeaveTypeId == leaveRequest.LeaveTypeId && q.EmployeeId ==
+            leaveRequest.EmployeeId);
+
+        allocation.Days += numberOfDays;
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task CreatLeaveRequest(LeaveRequestCreateVM model)
