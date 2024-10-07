@@ -64,7 +64,7 @@ public class LeaveRequestsService(IMapper _mapper,
         {
             StartDate = q.StartDate,
             EndDate = q.EndDate,
-            Id = q.LeaveTypeId,
+            Id = q.Id,
             LeaveType = q.LeaveType.Name,
             LeaveRequestStatus = (LeaveRequestStatusEnum)q.LeaveRequestSatusId,
             NumberOfDays = q.EndDate.DayNumber - q.StartDate.DayNumber
