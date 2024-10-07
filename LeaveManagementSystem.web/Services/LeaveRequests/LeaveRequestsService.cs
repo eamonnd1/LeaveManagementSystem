@@ -37,12 +37,12 @@ public class LeaveRequestsService(IMapper _mapper,
         await _context.SaveChangesAsync();
     }
 
-    public Task<LeaveRequestReadOnlyVM> GetAllLeaveRequests()
+    public Task<EmployeeLeaveRequestListVM> AdminGetAllLeaveRequests()
     {
         throw new NotImplementedException();
     }
 
-    public async Task<List<EmployeeLeaveRequestListVM>> GetEmployeeLeaveRequests()
+    public async Task<List<LeaveRequestReadOnlyVM>> GetEmployeeLeaveRequests()
     {
         var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
         var leaveRequests = await _context.LeaveRequests
