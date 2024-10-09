@@ -65,7 +65,8 @@ namespace LeaveManagementSystem.web.Controllers
         // Admin/Supervisor Review Requests (GET)
         public async Task<IActionResult> ListRequests()
         {
-            return View();
+            var model = _leaveRequestsService.AdminGetAllLeaveRequests();
+            return View(model);
         }
 
         // Admin/Supervisor Review Single Request (GET)

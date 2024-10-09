@@ -48,9 +48,37 @@ public class LeaveRequestsService(IMapper _mapper,
         await _context.SaveChangesAsync();
     }
 
-    public Task<EmployeeLeaveRequestListVM> AdminGetAllLeaveRequests()
+    public async Task<EmployeeLeaveRequestListVM> AdminGetAllLeaveRequests()
     {
-        throw new NotImplementedException();
+        var leaveRequests = await _context.LeaveRequests
+            .Include(q => q.LeaveType).ToListAsync();
+        var approvedLeaveRequestsCount = leaveRequests.Count(q => q.LeaveRequestSatusId ==
+        (int)LeaveRequestStatusEnum.Approved);
+        var pendingLeaveRequestsCount = leaveRequests.Count(q => q.LeaveRequestSatusId ==
+        (int)LeaveRequestStatusEnum.Pending);
+        var declinedLeaveRequestsCount = leaveRequests.Count(q => q.LeaveRequestSatusId ==
+        (int)LeaveRequestStatusEnum.Declined);
+
+        var leaveRequestModels = leaveRequests.Select(q => new LeaveRequestReadOnlyVM
+        {
+            StartDate = q.StartDate,
+            EndDate = q.EndDate,
+            Id = q.Id,
+            LeaveType = q.LeaveType.Name,
+            LeaveRequestStatus = (LeaveRequestStatusEnum)q.LeaveRequestSatusId,
+            NumberOfDays = q.EndDate.DayNumber - q.StartDate.DayNumber
+        }).ToList();
+
+        var model = new EmployeeLeaveRequestListVM
+        {
+            ApprovedRequests = approvedLeaveRequestsCount,
+            PendingRequests = pendingLeaveRequestsCount,
+            DeclinedRequests = declinedLeaveRequestsCount,
+            TotalRequests = leaveRequests.Count(),
+            LeaveRequests = leaveRequestModels
+        };
+
+        return model;
     }
 
     public async Task<List<LeaveRequestReadOnlyVM>> GetEmployeeLeaveRequests()
