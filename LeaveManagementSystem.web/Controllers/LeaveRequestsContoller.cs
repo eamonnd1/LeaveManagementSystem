@@ -70,9 +70,10 @@ namespace LeaveManagementSystem.web.Controllers
         }
 
         // Admin/Supervisor Review Single Request (GET)
-        public async Task<IActionResult> Review(int leaveRequestId)
+        public async Task<IActionResult> Review(int id)
         {
-            return View();
+            var model = await _leaveRequestsService.GetLeaveRequestForReview(id);
+            return View(model);
         }
 
         // Admin/Supervisor Review Single Request (POST)

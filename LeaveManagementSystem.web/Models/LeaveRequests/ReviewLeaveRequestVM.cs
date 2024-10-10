@@ -1,6 +1,6 @@
-﻿namespace LeaveManagementSystem.web.Models.LeaveRequests
+﻿namespace LeaveManagementSystem.web.Models.LeaveRequests;
+
+public class ReviewLeaveRequestVM : LeaveRequestReadOnlyVM
 {
-    public class ReviewLeaveRequestVM
-    {
-    }
+    public EmployeeListVM Employee { get; set; } = new EmployeeListVM();
 }

@@ -117,4 +117,29 @@ public class LeaveRequestsService(IMapper _mapper,
     {
         throw new NotImplementedException();
     }
+
+    public async Task<ReviewLeaveRequestVM> GetLeaveRequestForReview(int id)
+    {
+        var leaveRequest = await _context.LeaveRequests
+            .Include(q => q.LeaveType)
+            .FirstAsync(q => q.Id == id);
+        var user = await _userManager.FindByIdAsync(leaveRequest.EmployeeId);
+
+        var model = new ReviewLeaveRequestVM
+        {
+            StartDate = leaveRequest.StartDate,
+            EndDate = leaveRequest.EndDate,
+            NumberOfDays = leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber,
+            LeaveRequestStatus = (LeaveRequestStatusEnum)leaveRequest.LeaveRequestSatusId,
+            Id = leaveRequest.Id,
+            LeaveType = leaveRequest.LeaveType.Name,
+            Employee = new EmployeeListVM
+            {
+                Id = leaveRequest.EmployeeId,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            }
+        };
+    }
 }
