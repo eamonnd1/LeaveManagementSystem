@@ -2,6 +2,7 @@
 using LeaveManagementSystem.web.Services.LeaveAllocations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.AccessControl;
 
 namespace LeaveManagementSystem.web.Services.LeaveRequests;
 
@@ -113,9 +114,26 @@ public class LeaveRequestsService(IMapper _mapper,
         return allocation.Days < numberOfDays;
     }
 
-    public Task ReviewLeaveRequest(ReviewLeaveRequestVM model)
+    public async Task ReviewLeaveRequest(int leaveRequestId, bool approved)
     {
-        throw new NotImplementedException();
+        var leaveRequest = await _context.LeaveRequests.FindAsync(leaveRequestId);
+        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        var numberOfDays = leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber;
+
+        leaveRequest.LeaveRequestSatusId = approved
+            ? (int)LeaveRequestStatusEnum.Approved
+            : (int)LeaveRequestStatusEnum.Declined;
+
+        if (!approved)
+        {
+            var allocation = await _context.LeaveAllocations
+            .FirstAsync(q => q.LeaveTypeId == leaveRequest.LeaveTypeId && q.EmployeeId ==
+            leaveRequest.EmployeeId);
+
+            allocation.Days += numberOfDays;
+        }
+        leaveRequest.ReviewerId = user.Id;
+        await _context.SaveChangesAsync();
     }
 
     public async Task<ReviewLeaveRequestVM> GetLeaveRequestForReview(int id)
@@ -133,6 +151,7 @@ public class LeaveRequestsService(IMapper _mapper,
             LeaveRequestStatus = (LeaveRequestStatusEnum)leaveRequest.LeaveRequestSatusId,
             Id = leaveRequest.Id,
             LeaveType = leaveRequest.LeaveType.Name,
+            RequestComments = leaveRequest.RequestComments,
             Employee = new EmployeeListVM
             {
                 Id = leaveRequest.EmployeeId,
@@ -141,5 +160,7 @@ public class LeaveRequestsService(IMapper _mapper,
                 LastName = user.LastName
             }
         };
+
+        return model;
     }
 }
