@@ -9,7 +9,8 @@
 <div class="alert alert-info" role="alert">
     <hr />
     <p>
-        <strong>Employee Name:</strong> @Model.Employee.FirstName @Model.Employee.LastName
+        <strong>Name:</strong> @Model.Employee.FirstName @Model.Employee.LastName
+        <strong>Email:</strong> @Model.Employee.Email
     </p>
 </div>
 
@@ -48,7 +49,7 @@
         <button class="btn btn-success" data-id="@Model.Id" data-approved="true" id="approvalBtn">Approve</button>
     </div>
     <div class="col">
-        <button class="btn btn-danger" data-id="@Model.Id" data-approved="false" id="approvalBtn">Decline</button>
+        <button class="btn btn-danger" data-id="@Model.Id" data-approved="false" id="declineBtn">Decline</button>
     </div>
     <div class="col">
         <a class="btn btn-primary" asp-action="ListRequests">Back to list</a>
@@ -66,13 +67,37 @@
             $('#approvalBtn').click(
                 function (e) {
                     Swal.fire({
-                        title: "Confirm decision",
-                        text: "Confirm decision or press cancel to go back",
+                        title: "Confirm Approval?",
+                        text: "Are you sure you want to approve this leave request?",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, Confirm decision!"
+                        confirmButtonText: "Yes, Confirm approval!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            var approved = btn.data("approved");
+                            $('#leaveRequestId').val(id);
+                            $('#approved').val(approved);
+                            $('#approvalForm').submit();
+                        }
+                    });
+                }
+            )
+        })
+        $(function () {
+            $('#declineBtn').click(
+                function (e) {
+                    Swal.fire({
+                        title: "Confirm Decline?",
+                        text: "Are you sure you want to decline this leave request?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, Confirm decline!"
                     }).then((result) => {
                         if (result.isConfirmed) {
                             var btn = $(this);
