@@ -45,7 +45,7 @@ namespace LeaveManagementSystem.web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _leaveRequestsService.CreatLeaveRequest(model);
+                await _leaveRequestsService.CreateLeaveRequest(model);
                 return RedirectToAction(nameof(Index));
             }
             var leaveTypes = await _leaveTypesService.GetAll();
