@@ -2,6 +2,8 @@
 using LeaveManagementSystem.web.Models.LeaveRequests;
 using LeaveManagementSystem.web.Models.Periods;
 using LeaveManagementSystem.web.Services.LeaveAllocations;
+using LeaveManagementSystem.web.Services.Periods;
+using LeaveManagementSystem.web.Services.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.AccessControl;
@@ -9,9 +11,9 @@ using System.Security.AccessControl;
 namespace LeaveManagementSystem.web.Services.LeaveRequests;
 
 public class LeaveRequestsService(IMapper _mapper, 
-    UserManager<ApplicationUser> _userManager,
-    IHttpContextAccessor _httpContextAccessor,
-    ApplicationDbContext _context) : ILeaveRequestsService
+    IUserService _userService,
+    ApplicationDbContext _context, IPeriodsService _periodsService, 
+    ILeaveAllocationsService _leaveAllocationsService) : ILeaveRequestsService
 {
     public async Task CancelLeaveRequest(int leaveRequestId)
     {
@@ -19,16 +21,7 @@ public class LeaveRequestsService(IMapper _mapper,
         leaveRequest.LeaveRequestSatusId = (int)LeaveRequestStatusEnum.Canceled;
 
         // Restore canceled days to allocation
-        var currentDate = DateTime.Now;
-        var period = await _context.Periods.SingleAsync(q => q.EndDate.Year == currentDate.Year);
-        var numberOfDays = leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber;
-        var allocation = await _context.LeaveAllocations
-            .FirstAsync(q => q.LeaveTypeId == leaveRequest.LeaveTypeId 
-            && q.EmployeeId == leaveRequest.EmployeeId
-            && q.PeriodId == period.Id);
-
-        allocation.Days += numberOfDays;
-
+        await UpdateAllocationDays(leaveRequest, false);
         await _context.SaveChangesAsync();
     }
 
@@ -37,7 +30,7 @@ public class LeaveRequestsService(IMapper _mapper,
         // Map Data to leave requset data model
         var leaveRequest = _mapper.Map<LeaveRequest>(model);
         // Get logged in employee ID
-        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        var user = await _userService.GetLoggedInUser();
         leaveRequest.EmployeeId = user.Id;
         // Set LeaveRequestStatusId to pending
         leaveRequest.LeaveRequestSatusId = (int)LeaveRequestStatusEnum.Pending;
@@ -45,16 +38,7 @@ public class LeaveRequestsService(IMapper _mapper,
         _context.Add(leaveRequest);
         
         // Deduct allaction based on requested days
-        var currentDate = DateTime.Now;
-        var period = await _context.Periods.SingleAsync(q => q.EndDate.Year == currentDate.Year);
-        var numberOfDays = model.EndDate.DayNumber - model.StartDate.DayNumber;
-        var allocationToDeduct = await _context.LeaveAllocations.
-            FirstOrDefaultAsync(q => q.LeaveTypeId == model.LeaveTypeId 
-            && q.EmployeeId == user.Id
-            && q.PeriodId == period.Id
-            );
-
-        allocationToDeduct.Days -= numberOfDays;
+        await UpdateAllocationDays(leaveRequest, true);
         await _context.SaveChangesAsync();
     }
 
@@ -93,7 +77,7 @@ public class LeaveRequestsService(IMapper _mapper,
 
     public async Task<List<LeaveRequestReadOnlyVM>> GetEmployeeLeaveRequests()
     {
-        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        var user = await _userService.GetLoggedInUser();
         var leaveRequests = await _context.LeaveRequests
             .Include(q => q.LeaveType)
             .Where(q => q.EmployeeId == user.Id).ToListAsync();
@@ -113,9 +97,8 @@ public class LeaveRequestsService(IMapper _mapper,
 
     public async Task<bool> RequestDatesExceedAllocation(LeaveRequestCreateVM model)
     {
-        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
-        var currentDate = DateTime.Now;
-        var period = await _context.Periods.SingleAsync(q => q.EndDate.Year == currentDate.Year);
+        var user = await _userService.GetLoggedInUser();
+        var period = await _periodsService.GetCurrentPeriod();
         var numberOfDays = model.EndDate.DayNumber - model.StartDate.DayNumber;
         var allocation = await _context.LeaveAllocations.
             FirstOrDefaultAsync(q => q.LeaveTypeId == model.LeaveTypeId 
@@ -128,7 +111,7 @@ public class LeaveRequestsService(IMapper _mapper,
     public async Task ReviewLeaveRequest(int leaveRequestId, bool approved)
     {
         var leaveRequest = await _context.LeaveRequests.FindAsync(leaveRequestId);
-        var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext?.User);
+        var user = await _userService.GetLoggedInUser();
         var numberOfDays = leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber;
 
         leaveRequest.LeaveRequestSatusId = approved
@@ -139,13 +122,7 @@ public class LeaveRequestsService(IMapper _mapper,
 
         if (!approved)
         {
-            var currentDate = DateTime.Now;
-            var period = await _context.Periods.SingleAsync(q => q.EndDate.Year == currentDate.Year);
-            var allocation = await _context.LeaveAllocations
-            .FirstAsync(q => q.LeaveTypeId == leaveRequest.LeaveTypeId 
-            && q.EmployeeId == leaveRequest.EmployeeId
-            && q.PeriodId == period.Id);
-            allocation.Days += numberOfDays;
+            await UpdateAllocationDays(leaveRequest, false);
         }
         
         await _context.SaveChangesAsync();
@@ -156,7 +133,7 @@ public class LeaveRequestsService(IMapper _mapper,
         var leaveRequest = await _context.LeaveRequests
             .Include(q => q.LeaveType)
             .FirstAsync(q => q.Id == id);
-        var user = await _userManager.FindByIdAsync(leaveRequest.EmployeeId);
+        var user = await _userService.GetUserById(leaveRequest.EmployeeId);
 
         var model = new ReviewLeaveRequestVM
         {
@@ -177,5 +154,27 @@ public class LeaveRequestsService(IMapper _mapper,
         };
 
         return model;
+    }
+
+    private async Task UpdateAllocationDays(LeaveRequest leaveRequest, bool deductDays)
+    {
+        var allocation = await _leaveAllocationsService.GetCurrentAllocation
+            (leaveRequest.LeaveTypeId, leaveRequest.EmployeeId);
+        var numberOfDays = CalculateDays(leaveRequest.StartDate, leaveRequest.EndDate);
+
+        if (deductDays)
+        {
+            allocation.Days -= numberOfDays;
+        }
+        else
+        {
+            allocation.Days += numberOfDays;
+        }
+        _context.Entry(allocation).State = EntityState.Modified;
+    }
+
+    private int CalculateDays(DateOnly start, DateOnly end)
+    {
+        return end.DayNumber - start.DayNumber;
     }
 }
