@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LeaveManagementSystem.web.Data;
+namespace LeaveManagementSystem.Data;
 
 public class LeaveType : BaseEntity
 {

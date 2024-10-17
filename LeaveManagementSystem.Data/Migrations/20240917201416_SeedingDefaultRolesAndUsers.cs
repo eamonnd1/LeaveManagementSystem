@@ -4,7 +4,7 @@
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace LeaveManagementSystem.web.Data.Migrations
+namespace LeaveManagementSystem.Data.Migrations
 {
     /// <inheritdoc />
     public partial class SeedingDefaultRolesAndUsers : Migration

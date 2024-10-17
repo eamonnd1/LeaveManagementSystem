@@ -1,4 +1,4 @@
-﻿namespace LeaveManagementSystem.web.Data;
+﻿namespace LeaveManagementSystem.Data;
 
 public class LeaveRequest : BaseEntity
 {

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeaveManagementSystem.web",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaveManagementSystem.Common", "LeaveManagementSystem.Common\LeaveManagementSystem.Common.csproj", "{67292825-F3CF-4198-8163-AC9A7218104E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaveManagementSystem.Data", "LeaveManagementSystem.Data\LeaveManagementSystem.Data.csproj", "{174F9B66-A9D4-4533-A159-4D8AF5D50BC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{67292825-F3CF-4198-8163-AC9A7218104E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67292825-F3CF-4198-8163-AC9A7218104E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67292825-F3CF-4198-8163-AC9A7218104E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{174F9B66-A9D4-4533-A159-4D8AF5D50BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{174F9B66-A9D4-4533-A159-4D8AF5D50BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{174F9B66-A9D4-4533-A159-4D8AF5D50BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{174F9B66-A9D4-4533-A159-4D8AF5D50BC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

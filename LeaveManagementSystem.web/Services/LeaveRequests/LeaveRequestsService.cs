@@ -1,18 +1,13 @@
-﻿using LeaveManagementSystem.web.Data;
-using LeaveManagementSystem.web.Models.LeaveRequests;
-using LeaveManagementSystem.web.Models.Periods;
-using LeaveManagementSystem.web.Services.LeaveAllocations;
+﻿using LeaveManagementSystem.web.Services.LeaveAllocations;
 using LeaveManagementSystem.web.Services.Periods;
 using LeaveManagementSystem.web.Services.Users;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.AccessControl;
 
 namespace LeaveManagementSystem.web.Services.LeaveRequests;
 
-public class LeaveRequestsService(IMapper _mapper, 
+public class LeaveRequestsService(IMapper _mapper,
     IUserService _userService,
-    ApplicationDbContext _context, IPeriodsService _periodsService, 
+    ApplicationDbContext _context, IPeriodsService _periodsService,
     ILeaveAllocationsService _leaveAllocationsService) : ILeaveRequestsService
 {
     public async Task CancelLeaveRequest(int leaveRequestId)
@@ -36,7 +31,7 @@ public class LeaveRequestsService(IMapper _mapper,
         leaveRequest.LeaveRequestSatusId = (int)LeaveRequestStatusEnum.Pending;
         // Save leave request
         _context.Add(leaveRequest);
-        
+
         // Deduct allaction based on requested days
         await UpdateAllocationDays(leaveRequest, true);
         await _context.SaveChangesAsync();
@@ -101,10 +96,10 @@ public class LeaveRequestsService(IMapper _mapper,
         var period = await _periodsService.GetCurrentPeriod();
         var numberOfDays = model.EndDate.DayNumber - model.StartDate.DayNumber;
         var allocation = await _context.LeaveAllocations.
-            FirstOrDefaultAsync(q => q.LeaveTypeId == model.LeaveTypeId 
+            FirstOrDefaultAsync(q => q.LeaveTypeId == model.LeaveTypeId
             && q.EmployeeId == user.Id
             && q.PeriodId == period.Id);
-        
+
         return allocation.Days < numberOfDays;
     }
 
@@ -117,14 +112,14 @@ public class LeaveRequestsService(IMapper _mapper,
         leaveRequest.LeaveRequestSatusId = approved
             ? (int)LeaveRequestStatusEnum.Approved
             : (int)LeaveRequestStatusEnum.Declined;
-        
+
         leaveRequest.ReviewerId = user.Id;
 
         if (!approved)
         {
             await UpdateAllocationDays(leaveRequest, false);
         }
-        
+
         await _context.SaveChangesAsync();
     }
 

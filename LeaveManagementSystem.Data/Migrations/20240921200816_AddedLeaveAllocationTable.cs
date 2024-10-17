@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace LeaveManagementSystem.web.Data.Migrations
+namespace LeaveManagementSystem.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddedLeaveAllocationTable : Migration

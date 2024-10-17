@@ -1,6 +1,6 @@
 ﻿global using AutoMapper;
 global using LeaveManagementSystem.Common.Static;
-global using LeaveManagementSystem.web.Data;
+global using LeaveManagementSystem.Data;
 global using LeaveManagementSystem.web.Models.LeaveAllocations;
 global using LeaveManagementSystem.web.Models.LeaveRequests;
 global using LeaveManagementSystem.web.Models.LeaveTypes;
