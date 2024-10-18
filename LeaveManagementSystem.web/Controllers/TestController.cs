@@ -1,7 +1,4 @@
-﻿using LeaveManagementSystem.web.Models;
-using Microsoft.AspNetCore.Mvc;
-
-namespace LeaveManagementSystem.web.Controllers
+﻿namespace LeaveManagementSystem.web.Controllers
 {
     public class TestController : Controller
     {

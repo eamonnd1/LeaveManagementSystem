@@ -1,5 +1,6 @@
-﻿using LeaveManagementSystem.web.Services.LeaveAllocations;
-using LeaveManagementSystem.web.Services.LeaveTypes;
+﻿using LeaveManagementSystem.Application.Models.LeaveAllocations;
+using LeaveManagementSystem.Application.Services.LeaveAllocations;
+using LeaveManagementSystem.Application.Services.LeaveTypes;
 
 namespace LeaveManagementSystem.web.Controllers;
 
@@ -21,7 +22,7 @@ public class LeaveAllocationController(ILeaveAllocationsService _leaveAllocation
         return RedirectToAction(nameof(Details), new { userId = Id });
     }
 
-    [Authorize(Roles =Roles.Administrator)]
+    [Authorize(Roles = Roles.Administrator)]
     public async Task<IActionResult> EditAllocation(int? id)
     {
         if (id == null)
@@ -45,7 +46,7 @@ public class LeaveAllocationController(ILeaveAllocationsService _leaveAllocation
         {
             ModelState.AddModelError("Days", "The allocation exceeds the maximum leave type value");
         }
-        
+
         if (ModelState.IsValid)
         {
             await _leaveAllocationsService.EditAllocation(allocation);

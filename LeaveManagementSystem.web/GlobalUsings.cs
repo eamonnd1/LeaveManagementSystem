@@ -1,10 +1,6 @@
-﻿global using AutoMapper;
+﻿global using LeaveManagementSystem.Application.Models;
 global using LeaveManagementSystem.Common.Static;
 global using LeaveManagementSystem.Data;
-global using LeaveManagementSystem.web.Models.LeaveAllocations;
-global using LeaveManagementSystem.web.Models.LeaveRequests;
-global using LeaveManagementSystem.web.Models.LeaveTypes;
-global using LeaveManagementSystem.web.Models.Periods;
 global using Microsoft.AspNetCore.Authentication;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Identity;

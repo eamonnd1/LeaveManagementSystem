@@ -1,5 +1,6 @@
-﻿using LeaveManagementSystem.web.Services.LeaveRequests;
-using LeaveManagementSystem.web.Services.LeaveTypes;
+﻿using LeaveManagementSystem.Application.Models.LeaveRequests;
+using LeaveManagementSystem.Application.Services.LeaveRequests;
+using LeaveManagementSystem.Application.Services.LeaveTypes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LeaveManagementSystem.web.Controllers
@@ -37,7 +38,7 @@ namespace LeaveManagementSystem.web.Controllers
         public async Task<IActionResult> Create(LeaveRequestCreateVM model)
         {
             // Validate - Days dont exceed allocation
-            if(await _leaveRequestsService.RequestDatesExceedAllocation(model))
+            if (await _leaveRequestsService.RequestDatesExceedAllocation(model))
             {
                 ModelState.AddModelError(string.Empty, "Leave requested exceeds allocation.");
                 ModelState.AddModelError(nameof(model.EndDate), "The number of days is invalid.");
