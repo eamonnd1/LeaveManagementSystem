@@ -125,7 +125,7 @@
                     </a>
                 </li>
             }
-            @if (!User.IsInRole(Roles.Administrator))
+            @if (!User.Identity.IsAuthenticated)
             {
                 <li class="nav-small-cap">
                     <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
@@ -219,6 +219,8 @@
     </div>
   </div>
   <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script>
+  <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
   <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="~/js/sidebarmenu.js"></script>
   <script src="~/js/app.min.js"></script>
