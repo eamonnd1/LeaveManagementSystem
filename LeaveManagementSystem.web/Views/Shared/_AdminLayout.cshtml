@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - Leave Management System</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="~/images/leave.png" />
     <link rel="stylesheet" href="~/css/styles.min.css" />
     <link rel="stylesheet" href="~/lib/jqueryui/themes/base/jquery-ui.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -27,8 +27,8 @@
       <!-- Sidebar scroll-->
       <div class="scroll-sidebar" data-simplebar>
         <div class="d-flex mb-4 align-items-center justify-content-between">
-            <a href="index.html" class="text-nowrap logo-img ms-0 ms-md-1">
-              <img src="../assets/images/logos/dark-logo.svg" width="180" alt="">
+              <a asp-controller="Home" asp-action="Index" class="text-nowrap logo-img ms-0 ms-md-1">
+              <img src="~/images/project-management.png" width="200" alt="">
             </a>
             <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
               <i class="ti ti-x fs-8"></i>
@@ -48,7 +48,7 @@
                 aria-expanded="false"
               >
                 <span class="aside-icon p-2 bg-light-primary rounded-3">
-                  <i class="ti ti-layout-dashboard fs-7 text-primary"></i>
+                    <i class="ti ti-home fs-7 text-primary"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Home</span>
               </a>
@@ -60,7 +60,7 @@
                 aria-expanded="false"
               >
                 <span class="aside-icon p-2 bg-light-primary rounded-3">
-                  <i class="ti ti-layout-dashboard fs-7 text-primary"></i>
+                  <i class="ti ti-spy-off fs-7 text-primary"></i>
                 </span>
                 <span class="hide-menu ms-2 ps-1">Privacy</span>
               </a>
@@ -75,7 +75,7 @@
                         asp-controller="LeaveTypes" asp-action="Index"
                         aria-expanded="false">
                         <span class="aside-icon p-2 bg-light-warning rounded-3">
-                            <i class="ti ti-article fs-7 text-warning"></i>
+                            <i class="ti ti-layers-difference fs-7 text-warning"></i>
                         </span>
                         <span class="hide-menu ms-2 ps-1">Leave Types</span>
                     </a>
@@ -85,7 +85,7 @@
                         asp-controller="Periods" asp-action="Index"
                         aria-expanded="false">
                         <span class="aside-icon p-2 bg-light-danger rounded-3">
-                            <i class="ti ti-alert-circle fs-7 text-danger"></i>
+                            <i class="ti ti-calendar-code fs-7 text-danger"></i>
                         </span>
                         <span class="hide-menu ms-2 ps-1">Periods</span>
                     </a>
@@ -95,9 +95,9 @@
                         asp-controller="LeaveAllocation" asp-action="Index"
                         aria-expanded="false">
                         <span class="aside-icon p-2 bg-light-success rounded-3">
-                            <i class="ti ti-cards fs-7 text-success"></i>
+                            <i class="ti ti-calendar-event fs-7 text-success"></i>
                         </span>
-                        <span class="hide-menu ms-2 ps-1">Leave Allocations</span>
+                        <span class="hide-menu ms-2 ps-1">View Employees</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -105,15 +105,17 @@
                         asp-controller="LeaveRequests" asp-action="ListRequests"
                         aria-expanded="false">
                         <span class="aside-icon p-2 bg-light-primary rounded-3">
-                            <i class="ti ti-file-description fs-7 text-primary"></i>
+                            <i class="ti ti-calendar-search fs-7 text-primary"></i>
                         </span>
                         <span class="hide-menu ms-2 ps-1">Review Leave Requests</span>
                     </a>
                 </li>
-
-            }
-            @if (User.Identity.IsAuthenticated){
-
+                }
+            @if (User.IsInRole(Roles.Administrator)){
+                <li class="nav-small-cap">
+                    <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
+                    <span class="hide-menu">My Leave Area</span>
+                </li>
                 <li class="sidebar-item">
                     <a class="sidebar-link sidebar-link primary-hover-bg"
                         asp-controller="LeaveAllocation" asp-action="Details"
@@ -121,7 +123,19 @@
                         <span class="aside-icon p-2 bg-light-primary rounded-3">
                             <i class="ti ti-file-description fs-7 text-primary"></i>
                         </span>
-                        <span class="hide-menu ms-2 ps-1">Leave Allocation</span>
+                        <span class="hide-menu ms-2 ps-1">Create Leave Request</span>
+                    </a>
+                </li>
+            }
+            @if (User.IsInRole(Roles.Employee)){
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link primary-hover-bg"
+                        asp-controller="LeaveAllocation" asp-action="Details"
+                        aria-expanded="false">
+                        <span class="aside-icon p-2 bg-light-primary rounded-3">
+                            <i class="ti ti-file-description fs-7 text-primary"></i>
+                        </span>
+                        <span class="hide-menu ms-2 ps-1">Create Leave Request</span>
                     </a>
                 </li>
             }
@@ -176,12 +190,12 @@
                 <i class="ti ti-menu-2"></i>
               </a>
             </li>
-            <li class="nav-item">
+            @* <li class="nav-item">
               <a class="nav-link nav-icon-hover" href="javascript:void(0)">
                 <i class="ti ti-bell-ringing"></i>
                 <div class="notification bg-primary rounded-circle"></div>
               </a>
-            </li>
+            </li> *@
           </ul>
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
               <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
