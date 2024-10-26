@@ -172,8 +172,6 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
-            @if (SignInManager.IsSignedIn(User))
-            {
             <header class="app-header">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <ul class="navbar-nav">
@@ -189,31 +187,35 @@
                               </a>
                             </li> *@
                     </ul>
-                    <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    <img src="~/images/user.svg" alt="" width="35" height="35" class="rounded-circle">
-                                    Hello @User.Identity?.Name!
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                                    <div class="message-body">
-                                        <a asp-area="Identity" asp-page="/Account/Manage/Index" class="d-flex align-items-center gap-2 dropdown-item">
-                                            <i class="ti ti-user fs-6"></i>
-                                            <p class="mb-0 fs-3">My Profile</p>
-                                        </a>
-                                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                            <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block shadow-none">Logout</button>
-                                        </form>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                                       aria-expanded="false">
+                                        <img src="~/images/user.svg" alt="" width="35" height="35" class="rounded-circle">
+                                        @{string? email = User.Identity.Name; }
+                                        @{string name = email.Substring(0, email.IndexOf('@')); }
+                                        @name!
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                                        <div class="message-body">
+                                            <a asp-area="Identity" asp-page="/Account/Manage/Index" class="d-flex align-items-center gap-2 dropdown-item">
+                                                <i class="ti ti-user fs-6"></i>
+                                                <p class="mb-0 fs-3">My Profile</p>
+                                            </a>
+                                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                                <button type="submit" class="btn btn-outline-primary mx-3 mt-2 d-block shadow-none">Logout</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    }
                 </nav>
             </header>
-            }
             <!--  Header End -->
             <div class="container-fluid">
                 <div class="card">
