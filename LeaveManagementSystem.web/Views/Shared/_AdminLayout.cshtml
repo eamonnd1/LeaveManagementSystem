@@ -61,51 +61,55 @@
                                 <span class="hide-menu ms-2 ps-1">Privacy</span>
                             </a>
                         </li>
-                        @if (User.IsInRole(Roles.Administrator)){
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
-                            <span class="hide-menu">Management</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link sidebar-link warning-hover-bg"
-                               asp-controller="LeaveTypes" asp-action="Index"
-                               aria-expanded="false">
-                                <span class="aside-icon p-2 bg-light-warning rounded-3">
-                                    <i class="ti ti-layers-difference fs-7 text-warning"></i>
-                                </span>
-                                <span class="hide-menu ms-2 ps-1">Leave Types</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link sidebar-link danger-hover-bg"
-                               asp-controller="Periods" asp-action="Index"
-                               aria-expanded="false">
-                                <span class="aside-icon p-2 bg-light-danger rounded-3">
-                                    <i class="ti ti-calendar-code fs-7 text-danger"></i>
-                                </span>
-                                <span class="hide-menu ms-2 ps-1">Periods</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link sidebar-link success-hover-bg"
-                               asp-controller="LeaveAllocation" asp-action="Index"
-                               aria-expanded="false">
-                                <span class="aside-icon p-2 bg-light-success rounded-3">
-                                    <i class="ti ti-calendar-event fs-7 text-success"></i>
-                                </span>
-                                <span class="hide-menu ms-2 ps-1">View Employees</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link sidebar-link primary-hover-bg"
-                               asp-controller="LeaveRequests" asp-action="ListRequests"
-                               aria-expanded="false">
-                                <span class="aside-icon p-2 bg-light-primary rounded-3">
-                                    <i class="ti ti-calendar-search fs-7 text-primary"></i>
-                                </span>
-                                <span class="hide-menu ms-2 ps-1">Review Leave Requests</span>
-                            </a>
-                        </li>
+                        @if (User.IsInRole(Roles.Administrator))
+                        {
+                            <li class="nav-small-cap">
+                                <i class="ti ti-dots nav-small-cap-icon fs-5"></i>
+                                <span class="hide-menu">Management</span>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link sidebar-link warning-hover-bg"
+                                asp-controller="LeaveTypes" asp-action="Index"
+                                aria-expanded="false">
+                                    <span class="aside-icon p-2 bg-light-warning rounded-3">
+                                        <i class="ti ti-layers-difference fs-7 text-warning"></i>
+                                    </span>
+                                    <span class="hide-menu ms-2 ps-1">Leave Types</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link sidebar-link danger-hover-bg"
+                                asp-controller="Periods" asp-action="Index"
+                                aria-expanded="false">
+                                    <span class="aside-icon p-2 bg-light-danger rounded-3">
+                                        <i class="ti ti-calendar-code fs-7 text-danger"></i>
+                                    </span>
+                                    <span class="hide-menu ms-2 ps-1">Periods</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole(Roles.Administrator) || User.IsInRole(Roles.Supervisor))
+                        {
+                            <li class="sidebar-item">
+                                <a class="sidebar-link sidebar-link success-hover-bg"
+                                asp-controller="LeaveAllocation" asp-action="Index"
+                                aria-expanded="false">
+                                    <span class="aside-icon p-2 bg-light-success rounded-3">
+                                        <i class="ti ti-calendar-event fs-7 text-success"></i>
+                                    </span>
+                                    <span class="hide-menu ms-2 ps-1">View Employees</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link sidebar-link primary-hover-bg"
+                                asp-controller="LeaveRequests" asp-action="ListRequests"
+                                aria-expanded="false">
+                                    <span class="aside-icon p-2 bg-light-primary rounded-3">
+                                        <i class="ti ti-calendar-search fs-7 text-primary"></i>
+                                    </span>
+                                    <span class="hide-menu ms-2 ps-1">Review Leave Requests</span>
+                                </a>
+                            </li>
                         }
                         @if (User.IsInRole(Roles.Administrator)){
                         <li class="nav-small-cap">
