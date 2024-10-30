@@ -16,4 +16,8 @@ public class LeaveRequestReadOnlyVM
     public string LeaveType { get; set; } = string.Empty;
     [DisplayName("Status")]
     public LeaveRequestStatusEnum LeaveRequestStatus { get; set; }
+    [DisplayName("First Name")]
+    public string FirstName { get; set; }
+    [DisplayName("Last Name")]
+    public string LastName { get; set; }
 }

@@ -41,7 +41,9 @@ public class LeaveRequestsService(IMapper _mapper,
     public async Task<EmployeeLeaveRequestListVM> AdminGetAllLeaveRequests()
     {
         var leaveRequests = await _context.LeaveRequests
-            .Include(q => q.LeaveType).ToListAsync();
+            .Include(q => q.LeaveType)
+            .Include(q => q.Employee)
+            .ToListAsync();
         var approvedLeaveRequestsCount = leaveRequests.Count(q => q.LeaveRequestSatusId ==
         (int)LeaveRequestStatusEnum.Approved);
         var pendingLeaveRequestsCount = leaveRequests.Count(q => q.LeaveRequestSatusId ==
@@ -56,7 +58,9 @@ public class LeaveRequestsService(IMapper _mapper,
             Id = q.Id,
             LeaveType = q.LeaveType.Name,
             LeaveRequestStatus = (LeaveRequestStatusEnum)q.LeaveRequestSatusId,
-            NumberOfDays = q.EndDate.DayNumber - q.StartDate.DayNumber
+            NumberOfDays = q.EndDate.DayNumber - q.StartDate.DayNumber,
+            FirstName = q.Employee.FirstName,
+            LastName = q.Employee.LastName
         }).ToList();
 
         var model = new EmployeeLeaveRequestListVM

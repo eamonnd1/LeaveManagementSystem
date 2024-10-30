@@ -87,19 +87,19 @@
                                     <span class="hide-menu ms-2 ps-1">Periods</span>
                                 </a>
                             </li>
-                        }
-                        @if (User.IsInRole(Roles.Administrator) || User.IsInRole(Roles.Supervisor))
-                        {
                             <li class="sidebar-item">
                                 <a class="sidebar-link sidebar-link success-hover-bg"
-                                asp-controller="LeaveAllocation" asp-action="Index"
-                                aria-expanded="false">
+                                   asp-controller="LeaveAllocation" asp-action="Index"
+                                   aria-expanded="false">
                                     <span class="aside-icon p-2 bg-light-success rounded-3">
                                         <i class="ti ti-calendar-event fs-7 text-success"></i>
                                     </span>
                                     <span class="hide-menu ms-2 ps-1">View Employees</span>
                                 </a>
                             </li>
+                        }
+                        @if (User.IsInRole(Roles.Administrator) || User.IsInRole(Roles.Supervisor))
+                        {
                             <li class="sidebar-item">
                                 <a class="sidebar-link sidebar-link primary-hover-bg"
                                 asp-controller="LeaveRequests" asp-action="ListRequests"

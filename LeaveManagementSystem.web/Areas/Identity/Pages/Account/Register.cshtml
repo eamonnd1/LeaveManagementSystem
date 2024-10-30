@@ -16,6 +16,9 @@
                                 <img src="~/images/register.png" width="180" alt="">
                             </a>
                             <h2 class="text-center">Create a new a account</h2>
+
+                            <div asp-validation-summary="All" class="text-danger"></div>
+
                             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                                 <div class="mb-3">
                                     <label asp-for="Input.FirstName" class="form-label">First Name</label>
@@ -38,6 +41,7 @@
                                     <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
                                 </div>
                                 <div class="mb-4">
+                                    <p>Password must be at least 6 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.</p>
                                     <label asp-for="Input.Password" class="form-label">Password</label>
                                     <input type="password" class="form-control" asp-for="Input.Password" aria-describedby="textHelp">
                                     <span asp-validation-for="Input.Password" class="text-danger"></span>
@@ -60,16 +64,6 @@
                                             Supervisor
                                         </label>
                                     </div>
-                                    @* @foreach (var role in Model.RoleNames)
-                                    {
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" asp-for="Input.RoleName" value="@role">
-                                            <label class="form-check-label" asp-for="Input.RoleName">
-                                                @role
-                                            </label>
-                                        </div>
-                                    } *@
-
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 fs-4 mb-4 rounded-2">Sign Up</button>
                                 <div class="d-flex align-items-center justify-content-center">
@@ -92,8 +86,11 @@
             $("#Input_DateOfBirth").datepicker({
                 dateFormat: 'dd/mm/yy',
                 changeMonth: true,
-                changeYear: true
-            });
+                changeYear: true,
+                defaultDate: '01/01/2001',
+                minDate: new Date(1920, 0, 1),
+                yearRange: '1920:c',
+            }).datepicker("setDate", '01/01/2001');
         });
     </script>
     <script>

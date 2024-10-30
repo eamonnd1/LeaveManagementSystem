@@ -55,6 +55,12 @@
         <thead>
             <tr>
                 <th>
+                    @Html.DisplayNameFor(model => model.LeaveRequests[0].FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LeaveRequests[0].LastName)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.LeaveRequests[0].LeaveType)
                 </th>
                 <th>
@@ -93,6 +99,12 @@
                     className = "dark";
                 }
                 <tr class="bg-light">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.LeaveType)
                     </td>
