@@ -57,10 +57,10 @@
                     @Html.DisplayFor(modelItem => item.LeaveType)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
+                    <input type="date" value="@item.StartDate.ToString("yyyy-MM-dd")" class="form-control" disabled />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
+                    <input type="date" value="@item.EndDate.ToString("yyyy-MM-dd")" class="form-control" disabled />
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.NumberOfDays)

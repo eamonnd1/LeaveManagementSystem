@@ -22,7 +22,7 @@ public class LeaveRequestCreateVM : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (StartDate > EndDate)
+        if (StartDate >= EndDate)
         {
             yield return new ValidationResult("End date must be later than start date",
             [nameof(StartDate), nameof(EndDate)]);
