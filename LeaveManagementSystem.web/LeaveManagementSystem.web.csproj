@@ -44,11 +44,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Identity.Web" Version="3.2.2" />
+    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.2.2" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.2.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="Serilog" Version="4.0.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />

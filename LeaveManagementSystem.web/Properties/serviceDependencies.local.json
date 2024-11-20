@@ -3,6 +3,16 @@
     "mssql1": {
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:DefaultConnection"
+    },
+    "identityapp1": {
+      "connectionInfo": "App registration: LeaveManagementSystem, Tenant: Default Directory (edelaney1992hotmail.onmicrosoft.com - Microsoft Entra ID)",
+      "secretStore": "LocalSecretsFile",
+      "type": "identityapp.secretStore",
+      "connectionId": "AzureAD:ClientSecret"
+    },
+    "secrets1": {
+      "type": "secrets.user",
+      "dynamicId": null
     }
   }
 }
